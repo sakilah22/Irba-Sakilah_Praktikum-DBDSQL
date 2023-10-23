@@ -1,0 +1,66 @@
+create database PENJUALANDVD
+
+use PENJUALANDVD
+
+create table MOVIE(
+	KODE_DVD VARCHAR(10) primary key not null,
+	JUDUL varchar(60) not null,
+	HARGA_SEWA DOUBLE not null,
+	TAHUN_RILIS smallint,
+)
+
+alter table movie modify tahun_rilis year(4)
+
+create table GENRE(
+	ID_GENRE smallint primary key not null,
+	GENRE VARCHAR(45) not NULL
+)
+
+create table KECAMATAN(
+	ID_KECAMATAN smallint PRIMARY key not null,
+	KECAMATAN VARCHAR(45) not NULL
+)
+
+create table GENRE_MOVIE(
+	ID_GENRE smallint,
+	KODE_DVD VARCHAR(10),
+	foreign key (ID_GENRE) references GENRE(ID_GENRE),
+	foreign key (KODE_DVD) references MOVIE(KODE_DVD)
+)
+
+
+create table KELURAHAN(
+	ID_KELURAHAN smallint primary key not null,
+	ID_KECAMATAN SMALLINT,
+	KELURAHAN VARCHAR(45),
+	foreign key (ID_KECAMATAN) references KECAMATAN(ID_KECAMATAN)
+) 
+
+create table PELANGGAN(
+	KODE_PELANGGAN VARCHAR(10) primary key not null,
+	ID_KELURAHAN smallint,
+	NAMA VARCHAR(45),
+	ALAMAT VARCHAR(60),
+	JENIS_KELAMIN CHAR(1) check (JENIS_KELAMIN in('P', 'L')),
+	foreign key (ID_KELURAHAN) references KELURAHAN(ID_KELURAHAN) 
+)
+
+create table TRANSAKSI(
+	KODE_DVD VARCHAR(10),
+	KODE_PELANGGAN VARCHAR(10),
+	TANGGAL_SEWA DATE primary key not null,
+	TANGGAL_WAJIB_KEMBALI DATE not null,
+	TANGGAL_REALISASI_KEMBALI DATE not null,
+	foreign key (KODE_DVD) references MOVIE(KODE_DVD),
+	foreign key (KODE_PELANGGAN) references PELANGGAN(KODE_PELANGGAN)
+)
+
+create table KONTAK_PELANGGAN(
+	NO_HP VARCHAR(25) primary key not null,
+	KODE_PELANGGAN VARCHAR(10),
+	unique (NO_HP),
+	foreign key (KODE_PELANGGAN) references PELANGGAN(KODE_PELANGGAN)
+)
+
+
+
